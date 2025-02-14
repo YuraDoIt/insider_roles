@@ -4,18 +4,18 @@ import { Role } from '../enum/roles.enum';
 
 export class UpdateUserDto {
   @IsString()
-  @IsOptional() // This field is optional when updating the user
+  @IsOptional() 
   @MinLength(4, { message: 'Username is too short, minimum length is 4 characters.' })
   @MaxLength(20, { message: 'Username is too long, maximum length is 20 characters.' })
   username?: string;
 
   @IsString()
-  @IsOptional() // This field is optional when updating the user
+  @IsOptional() 
   @MinLength(6, { message: 'Password is too short, minimum length is 6 characters.' })
   @MaxLength(20, { message: 'Password is too long, maximum length is 20 characters.' })
-  password?: string;  // Optional field for updating the password
+  password?: string;  
 
   @IsEnum(Role)
-  @IsOptional() // Role is optional if it is not being changed
+  @IsOptional() 
   role?: Role;
 }

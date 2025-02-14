@@ -1,14 +1,13 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { OrdersModule } from './orders/orders.module';
 import { UsersModule } from './users/users.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { OrderEntity } from './orders/entity/order.entity';
 import { UserEntity } from './users/entity/users.entity';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
-  imports: [OrdersModule, UsersModule, TypeOrmModule.forRoot({
+  imports: [OrdersModule, UsersModule, AuthModule, TypeOrmModule.forRoot({
     type: 'postgres',
     host: process.env.DB_host,
     port: process.env.DB_port ? + process.env.DB_port : 5433,
@@ -19,8 +18,6 @@ import { UserEntity } from './users/entity/users.entity';
     synchronize: true,
     migrationsRun: true,
     logging: true,
-  }),],
-  controllers: [AppController],
-  providers: [AppService],
+  })],
 })
 export class AppModule { }
