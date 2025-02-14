@@ -4,6 +4,8 @@ import { AppService } from './app.service';
 import { OrdersModule } from './orders/orders.module';
 import { UsersModule } from './users/users.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { OrderEntity } from './orders/entity/order.entity';
+import { UserEntity } from './users/entity/users.entity';
 
 @Module({
   imports: [OrdersModule, UsersModule, TypeOrmModule.forRoot({
@@ -13,7 +15,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
     username: 'postgres',
     password: '12345',
     database: 'roles',
-    entities: [],
+    entities: [UserEntity, OrderEntity],
     synchronize: true,
     migrationsRun: true,
     logging: true,

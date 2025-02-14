@@ -1,5 +1,5 @@
 // src/orders/order.entity.ts
-import { User } from 'src/users/entity/user.entity';
+import { UserEntity } from 'src/users/entity/users.entity';
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
 
 export enum OrderStatus {
@@ -11,12 +11,12 @@ export enum OrderStatus {
 }
 
 @Entity()
-export class Order {
+export class OrderEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(() => User, user => user.id)
-  user: User;
+  @ManyToOne(() => UserEntity, user => user.id)
+  user: UserEntity;
 
   @Column('json')
   items: string[];
