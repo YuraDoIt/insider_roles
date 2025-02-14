@@ -8,6 +8,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { UserEntity } from 'src/users/entity/users.entity';
 import { Repository } from 'typeorm';
 import { RegisterDto } from './dto/register.dto';
+import { JwtPayload } from './jwt/jwt.interface';
 
 @Injectable()
 export class AuthService {
@@ -56,7 +57,7 @@ export class AuthService {
 
         await this.usersRepository.save(newUser);
 
-        const payload = { username: newUser.username, sub: newUser.id };
+        const payload: JwtPayload = { username: newUser.username, sub: newUser.id };
         const accessToken = this.jwtService.sign(payload);
 
         return { accessToken };

@@ -3,6 +3,8 @@ import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
+import { Role } from 'src/users/enum/roles.enum';
+import { Roles } from './guard/role.decorator';
 
 @Controller('auth')
 export class AuthController {
@@ -16,7 +18,9 @@ export class AuthController {
         return this.authService.register(RegisterDto);
     }
 
+
     @Post('login')
+    @Roles(Role.USER)
     @ApiOperation({ summary: 'Login a user' }) 
     @ApiResponse({ status: 200, description: 'User successfully logged in.' }) 
     @ApiResponse({ status: 401, description: 'Invalid credentials.' })
