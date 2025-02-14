@@ -1,4 +1,6 @@
 import * as dotenv from 'dotenv';
+import { OrderEntity } from 'src/orders/entity/order.entity';
+import { UserEntity } from 'src/users/entity/users.entity';
 dotenv.config();
 import { DataSourceOptions  } from 'typeorm';
 
@@ -9,9 +11,8 @@ const config: DataSourceOptions  = {
   username: `${process.env.TYPEORM_USERNAME}`,
   password: `${process.env.TYPEORM_PASSWORD}`,
   database: `${process.env.TYPEORM_DATABASE}`,
-  entities: [__dirname + '/**/*.entity{.ts,.js}'],
+  entities: [UserEntity, OrderEntity],
   synchronize: true,
-  migrations: [__dirname + '/migrations/**/*{.ts,.js}'],
   logging: true,
 };
 
