@@ -3,10 +3,11 @@ import { User } from 'src/users/entity/user.entity';
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
 
 export enum OrderStatus {
-  NEW = 'new',
-  PROCESSING = 'processing',
-  SHIPPED = 'shipped',
-  DELIVERED = 'delivered',
+    SHIPPED = 'shipped',
+    DELIVERED = 'delivered',
+    PROCESSING = 'processing',
+    PENDING = 'pending',
+    NEW = 'new',
 }
 
 @Entity()
