@@ -4,6 +4,7 @@ import { Repository } from 'typeorm';
 
 import * as jwt from 'jsonwebtoken';
 import { UserEntity } from 'src/users/entity/users.entity';
+import { env } from 'process';
 
 @Injectable()
 export class JwtAuthGuard implements CanActivate {
