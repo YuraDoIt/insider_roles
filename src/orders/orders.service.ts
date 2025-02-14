@@ -12,20 +12,19 @@ export class OrdersService {
         @InjectRepository(OrderEntity)
         private ordersRepository: Repository<OrderEntity>,
         @InjectRepository(UserEntity)
-        private usersRepository: Repository<UserEntity>, // We inject the User repository to work with user data if needed
+        private usersRepository: Repository<UserEntity>, 
     ) { }
 
     // Create a new order
     async create(createOrderDto: CreateOrderDto): Promise<OrderEntity> {
         const { userId, items, totalPrice } = createOrderDto;
 
-        const userIdAsNumber = Number(userId);  // Convert the userId to a number
+        const userIdAsNumber = Number(userId);
 
         const user = await this.usersRepository.findOne({ where: { id: userIdAsNumber } });
         if (!user) {
             throw new NotFoundException('User not found');
         }
-
 
         const order = new OrderEntity();
         order.user = user;

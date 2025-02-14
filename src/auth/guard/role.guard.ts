@@ -1,28 +1,55 @@
-// src/auth/roles.guard.ts
-import { Injectable, CanActivate, ExecutionContext, ForbiddenException } from '@nestjs/common';
+// role.guard.ts
+import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import { Role } from 'src/users/enum/roles.enum'; // Import your Role enum
+import { Observable } from 'rxjs';
+import { Role } from 'src/users/enum/roles.enum';
+import { AccessContorlService } from './access-control.service';
+import { ROLE_KEY } from '../decorator/roles.decorator';
+
+export class TokenDto {
+  id: number;
+  role: Role;
+}
 
 @Injectable()
-export class RolesGuard implements CanActivate {
-  constructor(private reflector: Reflector) {}
+export class RoleGuard implements CanActivate {
+  constructor(
+    private reflector: Reflector,
+    private accessControlService: AccessContorlService,
+  ) {}
 
-  async canActivate(context: ExecutionContext): Promise<boolean> {
-    // Get roles metadata from the route handler
-    const requiredRoles = this.reflector.get<Role[]>('roles', context.getHandler());
-
+  canActivate(
+    context: ExecutionContext,
+  ): boolean | Promise<boolean> | Observable<boolean> {
+    // Get the required roles from the metadata
+    const requiredRoles = this.reflector.getAllAndOverride<Role[]>(ROLE_KEY, [
+      context.getHandler(),
+      context.getClass(),
+    ]);
+    
     if (!requiredRoles) {
-      return true; // No roles required, proceed
+      return true; // If no roles are required, allow access
     }
 
     const request = context.switchToHttp().getRequest();
-    const user = request.user; // Get the authenticated user from request
+    const user = request.user; // Access the user object set by JwtAuthGuard
 
-    // Check if the user has the required role
-    if (!requiredRoles.includes(user.role)) {
-      throw new ForbiddenException('You do not have permission to access this resource');
+    if (!user) {
+      return false; // If there's no user, deny access
     }
 
-    return true; // User has the required role
+    // Check if the user's role matches any of the required roles
+    for (let role of requiredRoles) {
+      const result = this.accessControlService.isAuthorized({
+        requiredRole: role,
+        currentRole: user.role, // Access the role from request.user
+      });
+
+      if (result) {
+        return true; // If the user has the required role, allow access
+      }
+    }
+
+    return false; // If no match, deny access
   }
 }

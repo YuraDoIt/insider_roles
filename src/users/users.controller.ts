@@ -1,17 +1,23 @@
-import { Controller, Get, Post, Body, Param, Delete, Put } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete, Put, UseGuards } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
 import { UserCreateDto } from './dto/users-create.dto';
 import { UpdateUserDto } from './dto/users-update.dto';
 import { UserEntity } from './entity/users.entity';
+import { Roles } from 'src/auth/decorator/roles.decorator';
+import { JwtAuthGuard } from 'src/auth/guard/jwt-auth-guard';
+import { Role } from './enum/roles.enum';
+import { RoleGuard } from 'src/auth/guard/role.guard';
 
-@ApiTags('users') 
-@ApiBearerAuth() 
+@ApiTags('users')
+@ApiBearerAuth()
 @Controller('users')
 export class UsersController {
-  constructor(private readonly userService: UsersService) {}
+  constructor(private readonly userService: UsersService) { }
 
   @Post()
+  @Roles(Role.ADMIN)
+  @UseGuards(JwtAuthGuard, RoleGuard)
   @ApiOperation({ summary: 'Create a new user' })
   @ApiResponse({ status: 201, description: 'User created successfully.' })
   @ApiResponse({ status: 400, description: 'Bad request, invalid input data.' })
@@ -20,6 +26,8 @@ export class UsersController {
   }
 
   @Get()
+  @Roles(Role.ADMIN)
+  @UseGuards(JwtAuthGuard, RoleGuard)
   @ApiOperation({ summary: 'Get all users' })
   @ApiResponse({ status: 200, description: 'Successfully retrieved users.' })
   @ApiResponse({ status: 401, description: 'Unauthorized access.' })
@@ -28,6 +36,8 @@ export class UsersController {
   }
 
   @Get(':id')
+  @Roles(Role.ADMIN)
+  @UseGuards(JwtAuthGuard, RoleGuard)
   @ApiOperation({ summary: 'Get a user by ID' })
   @ApiResponse({ status: 200, description: 'Successfully retrieved the user.' })
   @ApiResponse({ status: 404, description: 'User not found.' })
@@ -36,6 +46,8 @@ export class UsersController {
   }
 
   @Put(':id')
+  @Roles(Role.ADMIN)
+  @UseGuards(JwtAuthGuard, RoleGuard)
   @ApiOperation({ summary: 'Update a user' })
   @ApiResponse({ status: 200, description: 'User updated successfully.' })
   @ApiResponse({ status: 400, description: 'Bad request, invalid input data.' })
@@ -48,6 +60,8 @@ export class UsersController {
   }
 
   @Delete(':id')
+  @Roles(Role.ADMIN)
+  @UseGuards(JwtAuthGuard, RoleGuard)
   @ApiOperation({ summary: 'Delete a user' })
   @ApiResponse({ status: 200, description: 'User deleted successfully.' })
   @ApiResponse({ status: 404, description: 'User not found.' })
