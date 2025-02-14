@@ -1,4 +1,3 @@
-// src/orders/order.entity.ts
 import { UserEntity } from 'src/users/entity/users.entity';
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
 

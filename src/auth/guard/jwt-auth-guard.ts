@@ -42,7 +42,4 @@ export class JwtAuthGuard implements CanActivate {
             throw new UnauthorizedException('Invalid or expired token');
         }
     }
-    //   async getCurrentUser(email: string) {
-    //     return this.user.find({ username: email });
-    //   }
 }

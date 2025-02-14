@@ -1,4 +1,3 @@
-// src/auth/dto/update-user.dto.ts
 import { IsString, IsEnum, IsOptional, MinLength, MaxLength } from 'class-validator';
 import { Role } from '../enum/roles.enum';
 import { ApiProperty } from '@nestjs/swagger';

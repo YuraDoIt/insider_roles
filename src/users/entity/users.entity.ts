@@ -1,4 +1,3 @@
-// src/users/user.entity.ts
 import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 import { Role } from '../enum/roles.enum';
 

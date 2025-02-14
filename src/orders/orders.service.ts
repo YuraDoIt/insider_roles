@@ -1,4 +1,3 @@
-// src/orders/orders.service.ts
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserEntity } from 'src/users/entity/users.entity';
@@ -15,7 +14,6 @@ export class OrdersService {
         private usersRepository: Repository<UserEntity>, 
     ) { }
 
-    // Create a new order
     async create(createOrderDto: CreateOrderDto): Promise<OrderEntity> {
         const { userId, items, totalPrice } = createOrderDto;
 
@@ -61,6 +59,7 @@ export class OrdersService {
         order.updatedAt = new Date();
         return this.ordersRepository.save(order);
     }
+    
 
     async remove(id: number): Promise<void> {
         const order = await this.ordersRepository.findOne({ where: { id } });

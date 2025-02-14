@@ -1,4 +1,3 @@
-// src/orders/dto/create-order.dto.ts
 import { IsArray, IsNumber, IsString, IsEnum } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { OrderStatus } from '../entity/order.entity';
