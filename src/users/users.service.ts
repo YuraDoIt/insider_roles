@@ -5,7 +5,6 @@ import { UserEntity } from './entity/users.entity';
 import { Role } from './enum/roles.enum';
 import { UserCreateDto } from './dto/users-create.dto';
 import { UpdateUserDto } from './dto/users-update.dto';
-import { JwtService } from '@nestjs/jwt';
 
 import * as bcrypt from 'bcrypt';  
 
