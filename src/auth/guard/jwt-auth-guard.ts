@@ -1,47 +1,48 @@
-// import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
-// import { GqlExecutionContext } from '@nestjs/graphql';
-// import { InjectRepository } from '@nestjs/typeorm';
-// import { Repository } from 'typeorm';
+import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 
-// import { User } from '../entity/user.entity';
-// import * as jwt from 'jsonwebtoken';
+import * as jwt from 'jsonwebtoken';
+import { UserEntity } from 'src/users/entity/users.entity';
 
-// interface userFromJwt {
-//   id: number;
-//   email: string;
-//   name: string;
-//   iat: number;
-//   exp: number;
-// }
+@Injectable()
+export class JwtAuthGuard implements CanActivate {
+    constructor(@InjectRepository(UserEntity) private user: Repository<UserEntity>) { }
 
-// @Injectable()
-// export class GqlAuthGuard implements CanActivate {
-//   constructor(@InjectRepository(User) private user: Repository<User>) {}
+    async canActivate(context: ExecutionContext): Promise<boolean> {
+        const request = context.switchToHttp().getRequest();
+        const authorization = request.headers['authorization'];
 
-//   async canActivate(context: ExecutionContext): Promise<boolean> {
-//     const ctx = GqlExecutionContext.create(context);
+        if (!authorization) {
+            throw new UnauthorizedException('No access token provided');
+        }
 
-//     const validAcessToken = ctx.getContext().req.headers.authorization.toString().split(' ')[1];
-//     if (!validAcessToken) {
-//       throw new Error('No acess token');
-//     }
+        const validAccessToken = authorization.split(' ')[1];
+        if (!validAccessToken) {
+            throw new UnauthorizedException('Invalid access token');
+        }
+        console.log(validAccessToken)
+        try {
+            const decodedPayload = <jwt.JwtPayload>jwt.verify(validAccessToken, 'yourSecretKey');
 
-//     const inputJwtUser = <userFromJwt>jwt.verify(validAcessToken, 'my-secret');
-//     // console.log(inputJwtUser.email + ' ' + inputJwtUser.name);
-//     const curUserFromDB = await this.user.findOne({ email: inputJwtUser.email });
-//     // console.log(curUser.email);
-//     console.log(inputJwtUser.email + ' ' + curUserFromDB.email);
-//     console.log(inputJwtUser.exp);
-//     console.log(inputJwtUser.iat);
+            const curUserFromDB = await this.user.findOne({ where: { username: decodedPayload.username } });
 
-//     if (curUserFromDB.email != inputJwtUser.email) {
-//       return false;
-//     } else {
-//       return true;
-//     }
-//   }
+            if (!curUserFromDB) {
+                throw new UnauthorizedException('User not found');
+            }
 
-//   async getCurrentUser(email: string) {
-//     return this.user.find({ email: email });
-//   }
-// }
+            if (curUserFromDB.username !== decodedPayload.username) {
+                throw new UnauthorizedException('Invalid user');
+            }
+
+            request.user = curUserFromDB;
+
+            return true;
+        } catch (error) {
+            throw new UnauthorizedException('Invalid or expired token');
+        }
+    }
+    //   async getCurrentUser(email: string) {
+    //     return this.user.find({ username: email });
+    //   }
+}

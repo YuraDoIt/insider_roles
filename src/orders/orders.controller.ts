@@ -6,6 +6,7 @@ import { Role } from 'src/users/enum/roles.enum';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { OrderStatus } from './entity/order.entity';
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
+import { JwtAuthGuard } from 'src/auth/guard/jwt-auth-guard';
 // import { JwtAuthGuard } from 'src/auth/guard/jwt-auth-guard';
 
 @ApiTags('orders') 
@@ -25,7 +26,7 @@ export class OrdersController {
     return this.ordersService.create(createOrderDto);
   }
   
-  // @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Get all orders' })
   @ApiResponse({ status: 200, description: 'Successfully retrieved orders.' })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
