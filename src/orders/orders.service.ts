@@ -37,16 +37,14 @@ export class OrdersService {
         return this.ordersRepository.save(order);
     }
 
-    // Find all orders
     async findAll(): Promise<OrderEntity[]> {
         return this.ordersRepository.find();
     }
 
-    // Find a specific order by ID
     async findOne(id: number): Promise<OrderEntity> {
         const order = await this.ordersRepository.findOne({
             where: { id },
-            relations: ['user'], // Include user in the result to get user data if needed
+            relations: ['user'], 
         });
         if (!order) {
             throw new NotFoundException('Order not found');
@@ -54,7 +52,6 @@ export class OrdersService {
         return order;
     }
 
-    // Update the status of an order (only for Admin)
     async updateStatus(id: number, status: OrderStatus): Promise<OrderEntity> {
         const order = await this.ordersRepository.findOne({ where: { id } });
         if (!order) {
@@ -65,7 +62,6 @@ export class OrdersService {
         return this.ordersRepository.save(order);
     }
 
-    // Admin can delete
     async remove(id: number): Promise<void> {
         const order = await this.ordersRepository.findOne({ where: { id } });
         if (!order) {
