@@ -7,8 +7,8 @@ import { JwtModule } from '@nestjs/jwt';
 
 @Module({
   imports: [TypeOrmModule.forFeature([UserEntity]), JwtModule.register({
-    secret: 'topsecret',
-    signOptions: { expiresIn: '60m' },  // Термін дії токену
+    secret: 'yourSecretKey',  
+    signOptions: { expiresIn: '60m' }, 
   }),],
   controllers: [UsersController],
   providers: [UsersService],
